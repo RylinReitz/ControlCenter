@@ -2,7 +2,10 @@ name: Update Computer Status
 
 on:
   repository_dispatch:
-    types: [update-status]
+    types:
+      - register-computer
+      - update-status
+
 
 jobs:
   update-status:

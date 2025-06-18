@@ -1,8 +1,6 @@
 {
   "computers": [
-    {
-      "computer_id": "RR_NITRO",
-      "status": ""
-    }
+    { "computer_id": "YOUR-PC-NAME", "status": "idle" },
+    …
   ]
 }

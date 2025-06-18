@@ -1,0 +1,29 @@
+name: Update Computer Status
+
+on:
+  repository_dispatch:
+    types: [update-status]
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Update status in commands.json
+        run: |
+          COMPUTER_ID="${{ github.event.client_payload.computer_id }}"
+          STATUS="${{ github.event.client_payload.status }}"
+
+          jq --arg id "$COMPUTER_ID" --arg status "$STATUS" \
+          '( .computers[] | select(.id == $id).status ) = $status' commands.json > tmp.json && mv tmp.json commands.json
+
+      - name: Commit changes
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add commands.json
+          git commit -m "Update computer status for ${{ github.event.client_payload.computer_id }}" || echo "No changes"
+          git push

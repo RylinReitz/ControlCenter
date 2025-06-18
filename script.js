@@ -2,7 +2,7 @@
 const GH_TOKEN    = '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';  // classic PAT, repo/public_repo + repo_dispatch scopes
 const REPO_OWNER  = 'RylinReitz';
 const REPO_NAME   = 'ControlCenter';
-const BRANCH      = 'main';  
+const BRANCH      = 'main';
 const RAW_BASE    = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}`;
 const DISPATCH_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/dispatches`;
 
@@ -67,10 +67,10 @@ document.getElementById('send-command')
     const options = {
       method: 'POST',
       headers: {
-        // repo_dispatch preview header
+        // preview header required for repository_dispatch
         'Accept': 'application/vnd.github.everest-preview+json',
         'Content-Type': 'application/json',
-        // classic PAT prefix
+        // classic PAT must use 'token ' prefix
         'Authorization': `token ${GH_TOKEN}`,
         'User-Agent': 'ControlCenterApp'
       },

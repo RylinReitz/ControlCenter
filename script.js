@@ -1,5 +1,5 @@
 // script.js
-const GH_TOKEN   = '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';  // must have repo_dispatch + public_repo or repo scope
+const GH_TOKEN   = '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';  // classic PAT, repo/public_repo + repo_dispatch scopes
 const REPO_OWNER = 'RylinReitz';
 const REPO_NAME  = 'ControlCenter';
 const BRANCH     = 'main';  
@@ -24,12 +24,10 @@ async function loadComputers() {
 
     list.innerHTML = '';
     computers.forEach(c => {
-      // show computer_id and its status
       const li = document.createElement('li');
       li.textContent = `${c.computer_id}: ${c.status || 'idle'}`;
       list.appendChild(li);
 
-      // add to dropdown
       const opt = document.createElement('option');
       opt.value = c.computer_id;
       opt.textContent = c.computer_id;
@@ -41,7 +39,6 @@ async function loadComputers() {
   }
 }
 
-// show message input only for send_message
 document.getElementById('command-select')
   .addEventListener('change', e => {
     document.getElementById('message-input-container')
@@ -56,7 +53,6 @@ document.getElementById('send-command')
       ? document.getElementById('message-input').value.trim()
       : '';
 
-    // pack command and detail into the status field
     const statusPayload = detail
       ? `${command}:${detail}`
       : command;
@@ -65,9 +61,11 @@ document.getElementById('send-command')
       const resp = await fetch(DISPATCH_URL, {
         method: 'POST',
         headers: {
-          'Accept': 'application/vnd.github.v3+json',
+          // preview header required for repository_dispatch
+          'Accept': 'application/vnd.github.everest-preview+json',
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${GH_TOKEN}`,
+          // classic PAT must use 'token ' prefix
+          'Authorization': `token ${GH_TOKEN}`,
           'User-Agent': 'ControlCenterApp'
         },
         body: JSON.stringify({
@@ -89,5 +87,5 @@ document.getElementById('send-command')
     }
   });
 
-// initial fetch
+// initial load
 loadComputers();

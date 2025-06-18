@@ -1,5 +1,5 @@
 // script.js
-const GH_TOKEN   = '<YOUR_GH_TOKEN>';  // must have repo_dispatch + public_repo or repo scope
+const GH_TOKEN   = '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';  // must have repo_dispatch + public_repo or repo scope
 const REPO_OWNER = 'RylinReitz';
 const REPO_NAME  = 'ControlCenter';
 const BRANCH     = 'main';  

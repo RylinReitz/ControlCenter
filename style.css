@@ -16,9 +16,9 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-h1 {
+h1, h2 {
   text-align: center;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 
 .section {
@@ -27,7 +27,7 @@ h1 {
 
 label {
   display: block;
-  margin-bottom: 0.5em;
+  margin: 0.5em 0 0.2em;
   font-weight: bold;
 }
 

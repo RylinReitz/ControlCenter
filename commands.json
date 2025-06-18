@@ -1,6 +1,3 @@
 {
-  "computers": [
-    { "computer_id": "YOUR-PC-NAME", "status": "idle" },
-    …
-  ]
+  "computers": []
 }

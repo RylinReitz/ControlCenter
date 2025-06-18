@@ -1,35 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="style.css">
-    <title>Control Center</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Control Center</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>My Computer Control Center</h1>
+  <div class="container">
+    <h1>Control Center</h1>
 
-    <div id="computers">
-        <h2>Computers Status</h2>
-        <ul id="computer-list">
-            <!-- Statuses will load here -->
-        </ul>
+    <div class="section" id="status-section">
+      <h2>Connected Computers</h2>
+      <ul id="computers-list">
+        <li>Loading…</li>
+      </ul>
     </div>
 
-    <div id="commands">
-        <h2>Issue Command</h2>
-        <select id="computer-select"></select>
-        <select id="command-select">
-            <option value="send_message">Send Message</option>
-            <option value="volume_up">Increase Volume</option>
-            <option value="volume_down">Decrease Volume</option>
-            <option value="mute">Mute Volume</option>
-            <option value="shutdown">Shutdown</option>
-        </select>
-        <input type="text" id="command-input" placeholder="Message or details...">
-        <button onclick="issueCommand()">Send Command</button>
-    </div>
+    <div class="section" id="command-section">
+      <h2>Send a Command</h2>
 
-    <script src="script.js"></script>
+      <label for="computer-select">Target Computer</label>
+      <select id="computer-select"></select>
+
+      <label for="command-select">Command</label>
+      <select id="command-select">
+        <option value="send_message">Send Message</option>
+        <option value="volume_up">Volume Up</option>
+        <option value="volume_down">Volume Down</option>
+        <option value="mute">Mute</option>
+        <option value="shutdown">Shutdown</option>
+      </select>
+
+      <div id="message-input-container" style="display:none;">
+        <label for="message-input">Message Text</label>
+        <input type="text" id="message-input" placeholder="Enter your message" />
+      </div>
+
+      <button id="send-command">Dispatch Command</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

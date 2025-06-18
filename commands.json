@@ -1,3 +1,8 @@
 {
-  "computers": []
+  "computers": [
+    {
+      "computer_id": "RR_NITRO",
+      "status": ""
+    }
+  ]
 }

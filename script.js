@@ -1,29 +1,30 @@
 // script.js
-const GH_TOKEN  = '<YOUR_GH_TOKEN>';
+const GH_TOKEN   = '<YOUR_GH_TOKEN>';  // must have repo_dispatch + public_repo or repo scope
 const REPO_OWNER = 'RylinReitz';
 const REPO_NAME  = 'ControlCenter';
-const BRANCH     = 'main';  // where commands.json lives
+const BRANCH     = 'main';  
 const RAW_BASE   = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}`;
 const DISPATCH_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/dispatches`;
 
 async function loadComputers() {
+  const list   = document.getElementById('computers-list');
+  const select = document.getElementById('computer-select');
+  list.innerHTML = '<li>Loading…</li>';
+  select.innerHTML = '';
+
   try {
     const res = await fetch(`${RAW_BASE}/commands.json`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const list = document.getElementById('computers-list');
-    const select = document.getElementById('computer-select');
-    list.innerHTML = '';
-    select.innerHTML = '';
+    const { computers } = await res.json();
 
-    const comps = data.computers || [];
-    if (comps.length === 0) {
+    if (!computers || computers.length === 0) {
       list.innerHTML = '<li>No computers registered.</li>';
       return;
     }
 
-    comps.forEach(c => {
-      // display “Name: status”
+    list.innerHTML = '';
+    computers.forEach(c => {
+      // show computer_id and its status
       const li = document.createElement('li');
       li.textContent = `${c.computer_id}: ${c.status || 'idle'}`;
       list.appendChild(li);
@@ -34,20 +35,19 @@ async function loadComputers() {
       opt.textContent = c.computer_id;
       select.appendChild(opt);
     });
-  } catch (e) {
-    console.error('Error loading computers:', e);
-    document.getElementById('computers-list').innerHTML = '<li>Error loading data.</li>';
+  } catch(err) {
+    console.error(err);
+    list.innerHTML = '<li>Error loading data.</li>';
   }
 }
 
-// toggle message box for send_message
+// show message input only for send_message
 document.getElementById('command-select')
   .addEventListener('change', e => {
-    const show = e.target.value === 'send_message';
-    document.getElementById('message-input-container').style.display = show ? 'block' : 'none';
+    document.getElementById('message-input-container')
+      .style.display = e.target.value === 'send_message' ? 'block' : 'none';
   });
 
-// dispatch a repository_dispatch event
 document.getElementById('send-command')
   .addEventListener('click', async () => {
     const computer_id = document.getElementById('computer-select').value;
@@ -56,7 +56,7 @@ document.getElementById('send-command')
       ? document.getElementById('message-input').value.trim()
       : '';
 
-    // we’re piggy-backing on your “update-status” event
+    // pack command and detail into the status field
     const statusPayload = detail
       ? `${command}:${detail}`
       : command;
@@ -72,25 +72,22 @@ document.getElementById('send-command')
         },
         body: JSON.stringify({
           event_type: 'update-status',
-          client_payload: {
-            computer_id,
-            status: statusPayload
-          }
+          client_payload: { computer_id, status: statusPayload }
         })
       });
 
       if (resp.status === 204) {
         alert('✅ Command dispatched!');
-        await loadComputers();    // refresh statuses
+        await loadComputers();
       } else {
         const txt = await resp.text();
         alert(`❌ Error ${resp.status}: ${txt}`);
       }
-    } catch (err) {
+    } catch(err) {
       console.error(err);
       alert('❌ Network or auth error.');
     }
   });
 
-// initial load
+// initial fetch
 loadComputers();
